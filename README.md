@@ -123,7 +123,7 @@ Prérequis : un JDK 21 installé et une connexion internet (le premier build
 télécharge Minecraft et les dépendances Mojang et Fabric).
 
 ```bash
-git clone https://github.com/<votre-compte>/firstclient.git
+git clone https://github.com/firstclientdev/firstclient.git
 cd firstclient
 ./gradlew build        # Linux et macOS
 gradlew.bat build      # Windows

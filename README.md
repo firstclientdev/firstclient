@@ -1,4 +1,5 @@
-# FirstClient
+(readme fait avec de l'ia me petez pas les couilles j'avais la flemme ok?)
+# FirstClient 
 
 > **Avertissement.** Ce mod est fourni tel quel, pour un usage personnel et
 > éducatif. L'auteur n'est pas responsable de ce que vous en faites :

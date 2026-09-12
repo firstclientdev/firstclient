@@ -1,0 +1,73 @@
+plugins {
+    id 'fabric-loom' version "${loom_version}"
+    id 'java'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+}
+
+// Client-only mod in a single source set: no splitEnvironmentSourceSets,
+// so net.minecraft.client.* stays visible from src/main/java.
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+// Optional local convenience: copy the built jar into a dev instance.
+// No personal path lives in this repo. To enable it, create an untracked
+// local.properties file next to this script with:
+//   firstclient.modsDir=C:/path/to/your/instance/mods
+def localProps = new Properties()
+def localPropsFile = file("local.properties")
+if (localPropsFile.isFile()) {
+    localPropsFile.withInputStream { stream -> localProps.load(stream) }
+}
+def localModsDir = localProps.getProperty("firstclient.modsDir", "").trim()
+if (!localModsDir.isEmpty() && file(localModsDir).isDirectory()) {
+    tasks.register("copyToFirstClient", Copy) {
+        dependsOn("remapJar")
+
+        from(tasks.named("remapJar").flatMap { it.archiveFile })
+        into(localModsDir)
+
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
+    tasks.named("build") {
+        finalizedBy("copyToFirstClient")
+    }
+}

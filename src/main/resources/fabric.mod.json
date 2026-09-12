@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "firstclient",
+  "version": "${version}",
+  "name": "FirstClient",
+  "description": "Lightweight client-side automation mod: detects teleports to a target position and runs configured commands.",
+  "authors": ["FirstClient"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.firstclient.FirstClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  }
+}
